@@ -2,7 +2,7 @@ const User = require("../models/user");
 const { generateToken } = require("../utils/jwt");
 
 const register = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, name, password } = req.body;
 
     try {
         const user = await User.findOne({ email }).exec();
@@ -11,7 +11,7 @@ const register = async (req, res) => {
             return res.status(409).json({ error: "User already exists" });
         }
 
-        const newUser = new User({ email, password });
+        const newUser = new User({ email, name, password });
         if (password !== "") {
             await newUser.hashPassword();
         }
@@ -39,7 +39,30 @@ const login = async (req, res) => {
     return res.status(200).json({ ...user._doc, token });
 };
 
+const updateById = async (req, res) => {
+    const { userId } = req.params;
+    const { avatar, name, email, phone, address } = req.body;
+
+    const user = await User.findOneAndUpdate(
+        { _id: userId },
+        {
+            avatar,
+            name,
+            email,
+            phone,
+            address,
+        },
+        { new: true }
+    ).exec();
+    if (!user) {
+        return res.status(404).json({ error: "User not found" });
+    }
+    delete user._doc.password;
+    return res.status(200).json(user);
+};
+
 module.exports = {
     register,
     login,
+    updateById,
 };

@@ -10,11 +10,15 @@ const schema = new Schema({
         type: String,
         required: true,
     },
+    avatar: {
+        url: String,
+        publicId: String,
+    },
     name: {
         first: String,
         last: String,
     },
-    phone: Number,
+    phone: String,
     address: String,
     balance: {
         type: Number,
