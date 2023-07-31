@@ -1,6 +1,8 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcrypt");
 
+const roleList = ["client", "admin"];
+
 const schema = new Schema({
     email: {
         type: String,
@@ -31,6 +33,11 @@ const schema = new Schema({
             quantity: Number,
         },
     ],
+    role: {
+        type: String,
+        enum: roleList,
+        default: "client",
+    },
 });
 
 schema.methods.hashPassword = async function () {
