@@ -23,6 +23,23 @@ const upload = async (req, res) => {
     }
 };
 
+const deleteByPublicId = async (req, res) => {
+    const { publicId } = req.body;
+
+    try {
+        const response = await cloudinary.uploader.destroy(publicId);
+
+        if (response.result === "ok") {
+            return res.status(200).send(response);
+        } else {
+            throw new Error(response);
+        }
+    } catch (error) {
+        return res.status(500).json({ error });
+    }
+};
+
 module.exports = {
     upload,
+    deleteByPublicId,
 };

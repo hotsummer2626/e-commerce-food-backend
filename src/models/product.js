@@ -17,8 +17,8 @@ const schema = new Schema({
         required: true,
     },
     imgSrc: {
-        type: String,
-        required: true,
+        url: String,
+        publicId: String,
     },
     price: {
         type: Number,
