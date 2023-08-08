@@ -70,8 +70,8 @@ const checkout = async (req, res) => {
             line_items: productList,
             mode: "payment",
             customer_email: customerEmail,
-            success_url: `http://localhost:8000?success=true`,
-            cancel_url: `http://localhost:8000?canceled=true`,
+            success_url: `https://64d260d018f27023d7a8d884--starlit-palmier-3e44c4.netlify.app/?success=true`,
+            cancel_url: `https://64d260d018f27023d7a8d884--starlit-palmier-3e44c4.netlify.app/?canceled=true`,
             metadata,
         });
 
