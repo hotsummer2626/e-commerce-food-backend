@@ -8,9 +8,17 @@ const router = require("./routes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const morganLog =
-  process.env.NODE_ENV === "production" ? morgan("dev") : morgan("common");
+    process.env.NODE_ENV === "production" ? morgan("dev") : morgan("common");
 
-app.use(express.json());
+app.use((req, res, next) => {
+  console.log(req.originalUrl)
+    if (req.originalUrl === "/api/stripe/webhook") {
+        next();
+    } else {
+        express.json()(req, res, next);
+    }
+});
+
 app.use(cors());
 app.use(morganLog);
 app.use("/api", router);
@@ -18,5 +26,5 @@ app.use("/api", router);
 connectToDB();
 
 app.listen(PORT, () => {
-  console.log(`server listening on port ${PORT}`);
+    console.log(`server listening on port ${PORT}`);
 });

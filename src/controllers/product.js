@@ -1,10 +1,17 @@
 const Product = require("../models/product");
+const User = require("../models/user");
 
 const create = async (req, res) => {
-    const { imgSrc, name, price, category } = req.body;
+    const { imgSrc, name, price, category, stripe } = req.body;
 
     try {
-        const newProduct = new Product({ imgSrc, name, price, category });
+        const newProduct = new Product({
+            imgSrc,
+            name,
+            price,
+            category,
+            stripe,
+        });
 
         await newProduct.save();
         return res.sendStatus(200);
@@ -28,17 +35,74 @@ const get = async (req, res) => {
 };
 
 const updateById = async (req, res) => {
+    const { productId } = req.params;
+    const { action } = req.query;
     try {
-        const { productId } = req.params;
-        const { imgSrc, name, price, category } = req.body;
+        if (action && action === "setLiked") {
+            const { userId } = req.body;
+
+            const product = await Product.findOneAndUpdate(
+                { _id: productId },
+                { $addToSet: { liked: userId } }
+            ).exec();
+
+            const user = await User.findOneAndUpdate(
+                { _id: userId },
+                { $addToSet: { favorite: productId } },
+                { new: true }
+            )
+                .populate("favorite")
+                .populate("shoppingCart.product")
+                .exec();
+
+            if (!product || !user) {
+                return res
+                    .status(404)
+                    .json({ error: "Product or user not found" });
+            }
+
+            delete user._doc.password;
+
+            return res.status(200).json({ product, user });
+        }
+
+        if (action && action === "setDisliked") {
+            const { userId } = req.body;
+
+            const product = await Product.findOneAndUpdate(
+                { _id: productId },
+                { $pull: { liked: userId } }
+            ).exec();
+
+            const user = await User.findOneAndUpdate(
+                { _id: userId },
+                { $pull: { favorite: productId } },
+                { new: true }
+            )
+                .populate("favorite")
+                .populate("shoppingCart.product")
+                .exec();
+
+            if (!product || !user) {
+                return res
+                    .status(404)
+                    .json({ error: "Product or user not found" });
+            }
+
+            delete user._doc.password;
+
+            return res.status(200).json({ product, user });
+        }
+
+        const { name, price, category, stripe } = req.body;
 
         const product = await Product.findOneAndUpdate(
             { _id: productId },
             {
-                imgSrc,
                 name,
                 price,
                 category,
+                stripe,
             },
             { new: true }
         ).exec();

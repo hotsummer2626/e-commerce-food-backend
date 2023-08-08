@@ -9,16 +9,14 @@ const categoryList = [
     "seafood",
 ];
 
-const ingredientList = ["beef", "chicken", "vege"];
-
 const schema = new Schema({
     name: {
         type: String,
         required: true,
     },
     imgSrc: {
-        url: String,
-        publicId: String,
+        url: { type: String, required: true },
+        publicId: { type: String, required: true },
     },
     price: {
         type: Number,
@@ -29,9 +27,9 @@ const schema = new Schema({
         type: String,
         enum: categoryList,
     },
-    ingredient: {
-        type: String,
-        enum: ingredientList,
+    stripe: {
+        productId: { type: String, required: true },
+        priceId: { type: String, required: true },
     },
 });
 

@@ -26,7 +26,10 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({ email }).exec();
+        const user = await User.findOne({ email })
+            .populate("favorite")
+            .populate("shoppingCart.product")
+            .exec();
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
@@ -46,20 +49,24 @@ const login = async (req, res) => {
 
 const updateById = async (req, res) => {
     const { userId } = req.params;
-    const { avatar, name, email, phone, address } = req.body;
+    const { avatar, name, email, phone, address, shoppingCart } = req.body;
 
     try {
         const user = await User.findOneAndUpdate(
             { _id: userId },
             {
-                avatar,
-                name,
-                email,
-                phone,
-                address,
+                ...(avatar ? { avatar } : {}),
+                ...(name ? { name } : {}),
+                ...(email ? { email } : {}),
+                ...(phone ? { phone } : {}),
+                ...(address ? { address } : {}),
+                ...(shoppingCart ? { shoppingCart } : {}),
             },
             { new: true }
-        ).exec();
+        )
+            .populate("favorite")
+            .populate("shoppingCart.product")
+            .exec();
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
@@ -70,8 +77,33 @@ const updateById = async (req, res) => {
     }
 };
 
+const getCurrentUser = async (req, res) => {
+    const currentUser = req.user;
+
+    if (!currentUser) {
+        return res.status(401).send({ error: "Unauthorized" });
+    }
+
+    try {
+        const user = await User.findById(currentUser._id)
+            .populate("favorite")
+            .populate("shoppingCart.product")
+            .exec();
+
+        if (!user) {
+            return res.status(404).send({ error: "User not founded" });
+        }
+
+        delete user._doc.password;
+        return res.status(200).send(user);
+    } catch (error) {
+        return res.status(500).json({ error: "Something unexpected happened" });
+    }
+};
+
 module.exports = {
     register,
     login,
     updateById,
+    getCurrentUser,
 };

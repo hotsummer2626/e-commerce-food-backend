@@ -19,7 +19,7 @@ const upload = async (req, res) => {
         fs.unlink(req.file.path, () => {});
         return res.status(200).json(result);
     } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
     }
 };
 
@@ -35,7 +35,7 @@ const deleteByPublicId = async (req, res) => {
             throw new Error(response);
         }
     } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
     }
 };
 

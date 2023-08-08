@@ -29,7 +29,8 @@ const schema = new Schema({
     favorite: [{ type: Schema.Types.ObjectId, ref: "Product" }],
     shoppingCart: [
         {
-            productId: { type: Schema.Types.ObjectId, ref: "Product" },
+            _id: false,
+            product: { type: Schema.Types.ObjectId, ref: "Product" },
             quantity: Number,
         },
     ],
