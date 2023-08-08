@@ -1,28 +1,31 @@
 {
-  "name": "login_backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "dev": "nodemon src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "bcrypt": "^5.1.0",
-    "cloudinary": "^1.39.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.2",
-    "express": "^4.18.1",
-    "jsonwebtoken": "^9.0.1",
-    "mongoose": "^6.6.2",
-    "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1",
-    "stripe": "^12.16.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.20"
-  }
+    "name": "login_backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "pm2 start src/app.js --name e_commerce",
+        "poststart": "pm2 log e_commerce",
+        "stop": "pm2 stop e_commerce",
+        "dev": "nodemon src/app.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.1.0",
+        "cloudinary": "^1.39.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.2",
+        "express": "^4.18.1",
+        "jsonwebtoken": "^9.0.1",
+        "mongoose": "^6.6.2",
+        "morgan": "^1.10.0",
+        "multer": "^1.4.5-lts.1",
+        "pm2": "^5.3.0",
+        "stripe": "^12.16.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.20"
+    }
 }

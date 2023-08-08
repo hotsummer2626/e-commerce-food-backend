@@ -11,7 +11,6 @@ const morganLog =
     process.env.NODE_ENV === "production" ? morgan("dev") : morgan("common");
 
 app.use((req, res, next) => {
-  console.log(req.originalUrl)
     if (req.originalUrl === "/api/stripe/webhook") {
         next();
     } else {
